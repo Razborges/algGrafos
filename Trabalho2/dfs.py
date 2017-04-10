@@ -65,7 +65,7 @@ if __name__ == '__main__':
     grafo = {}
 
     for line in arquivo:
-        u, v = map(int, line.split())
+        u, v = map(str, line.split())
         if u not in grafo:
             grafo[u] = [v]
         else:
