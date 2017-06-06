@@ -5,8 +5,8 @@ __author__ = 'Rafael Borges'
 '''
 Ex. de implementação do algoritmo DFS (Busca em profundidade em Grafo) imprimindo todos os vértices do grafo
 '''
-
 import sys, os
+
 
 def dfs_recursivo(grafo, visitado):
     for vertice in grafo:
