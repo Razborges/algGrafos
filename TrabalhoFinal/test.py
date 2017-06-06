@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import sys, os
 from graph import Graph
 
@@ -15,7 +17,7 @@ if __name__ == '__main__':
         arquivo = open(nome_arquivo_entrada, 'r')
         arquivo_saida = open(nome_arquivo_saida, 'w')
     except IOError:
-        sys.stderr.write('Erro ao tentar ler ou criar o arquivo, verifique se estão válidos.')
+        sys.stderr.write('Erro ao tentar ler ou criar o arquivo, verifique se estão válidos.\n')
         sys.exit()
         sys.exit()
 
@@ -35,6 +37,6 @@ if __name__ == '__main__':
         arquivo.close()
         arquivo_saida.close()
     except IOError:
-        sys.stderr.write('Erro ao tentar fechar os arquivos.')
+        sys.stderr.write('Erro ao tentar fechar os arquivos.\n')
         sys.exit()
         sys.exit()
