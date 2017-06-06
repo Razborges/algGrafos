@@ -1,6 +1,6 @@
 # coding: utf-8
 
-class Graph(object):
+class Grafo(object):
     '''Definiçoes da estrutura do grafo e funções de algoritmos auxiliares'''
     def __init__(self):
         self.n = 0      # numero de vertices
@@ -8,12 +8,13 @@ class Graph(object):
         self.d = 0      # desvio medio
         self.arestas = {}
         self.pesos = {}
+        self.distribuicao_graus = {}
 
-    def read_file(self, arquivo):
+    def ler_arquivo(self, arquivo):
         self.n = int(arquivo.readline())
         for line in arquivo:
             u, v, p = map(str, line.split())
-            key = str(u) + str(v)
+            key = str(u) + '-' + str(v)
             if u not in self.arestas:
                 self.arestas[u] = [v]
                 self.pesos[key] = [p]
@@ -23,12 +24,16 @@ class Graph(object):
                 self.pesos[key] = [p]
                 self.m = self.m + 1
         self.d = 2 * self.m/self.n
+        self.graus_empiricos()
 
-    def write_file(self, arquivo):
-        output = '# n = ' + str(self.n) + '\n'
-        output += '# m = ' + str(self.m) + '\n'
-        output += '# d_medio = ' + str(self.d) + '\n'
-        arquivo.write(output)
+    def escrever_arquivo(self, arquivo):
+        texto = '# n = ' + str(self.n) + '\n'
+        texto += '# m = ' + str(self.m) + '\n'
+        texto += '# d_medio = ' + str(self.d) + '\n'
+        for m in self.distribuicao_graus:
+            grau = self.distribuicao_graus[m]/self.n
+            texto += str(m) + ' ' + str(grau) + '\n'
+        arquivo.write(texto)
 
     def bfs(self, inicio):
         q = []
@@ -71,7 +76,15 @@ class Graph(object):
         self.dfs(visitado, ordem)
         print(ordem)
 
-    def print_graph(self):
+    def graus_empiricos(self):
+        for m in self.arestas:
+            grau = len(self.arestas[m])
+            if grau not in self.distribuicao_graus:
+                self.distribuicao_graus[grau] = 1
+            else:
+                self.distribuicao_graus[grau] = self.distribuicao_graus[grau] + 1
+
+    def imprimir_grafo(self):
         print('*** GRAFO DETALHADO ***')
         print('# n = ' + str(self.n))
         print('# m = ' + str(self.m))
@@ -81,4 +94,7 @@ class Graph(object):
         print('\n')
         print('# relação arestas e peso:')
         print(self.pesos)
+        print('\n')
+        print('# distribuiçao dos graus:')
+        print(self.distribuicao_graus)
         print('\n')

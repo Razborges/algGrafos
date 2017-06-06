@@ -1,13 +1,13 @@
 # coding: utf-8
 
 import sys, os
-from graph import Graph
+from Grafo import Grafo
 
 if __name__ == '__main__':
 
     if len(sys.argv) != 3:
         sys.stderr.write('Erro na chamada do comando.\n')
-        sys.stderr.write('Para executar digite: \'python test.py NOME_ARQUIVO_ENTRADA.TXT NOME_ARQUIVO_SAIDA.TXT\n')
+        sys.stderr.write('Para executar digite: \'python teste.py NOME_ARQUIVO_ENTRADA.TXT NOME_ARQUIVO_SAIDA.TXT\n')
         sys.exit()
 
     nome_arquivo_entrada = sys.argv[1]
@@ -21,10 +21,10 @@ if __name__ == '__main__':
         sys.exit()
         sys.exit()
 
-    grafo = Graph()
-    grafo.read_file(arquivo)
-    grafo.write_file(arquivo_saida)
-    grafo.print_graph()
+    grafo = Grafo()
+    grafo.ler_arquivo(arquivo)
+    grafo.escrever_arquivo(arquivo_saida)
+    grafo.imprimir_grafo()
 
     print('*** TESTE BFS ***')
     grafo.bfs('1')
