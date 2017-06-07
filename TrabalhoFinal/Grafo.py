@@ -9,6 +9,7 @@ class Grafo(object):
         self.arestas = {}
         self.pesos = {}
         self.distribuicao_graus = {}
+        self.grau = {}
 
     def ler_arquivo(self, arquivo):
         self.n = int(arquivo.readline())
@@ -23,6 +24,16 @@ class Grafo(object):
                 self.arestas[u].append(v)
                 self.pesos[key] = [p]
                 self.m = self.m + 1
+
+            if v not in self.grau:
+                self.grau[v] = [u]
+            else:
+                self.grau[v].append(u)
+            if u not in self.grau:
+                self.grau[u] = [v]
+            else:
+                self.grau[u].append(v)
+
         self.d = 2 * self.m/self.n
         self.graus_empiricos()
 
@@ -77,12 +88,13 @@ class Grafo(object):
         print(ordem)
 
     def graus_empiricos(self):
-        for m in self.arestas:
-            grau = len(self.arestas[m])
+        for m in self.grau:
+            grau = len(self.grau[m])
             if grau not in self.distribuicao_graus:
                 self.distribuicao_graus[grau] = 1
             else:
                 self.distribuicao_graus[grau] = self.distribuicao_graus[grau] + 1
+
 
     def imprimir_grafo(self):
         print('*** GRAFO DETALHADO ***')
@@ -98,3 +110,4 @@ class Grafo(object):
         print('# distribuiçao dos graus:')
         print(self.distribuicao_graus)
         print('\n')
+        print (self.grau)
