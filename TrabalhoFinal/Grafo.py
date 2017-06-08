@@ -9,7 +9,6 @@ class Grafo(object):
         self.arestas = {}
         self.pesos = {}
         self.distribuicao_graus = {}
-        self.grau = {}
 
     def ler_arquivo(self, arquivo):
         self.n = int(arquivo.readline())
@@ -25,42 +24,12 @@ class Grafo(object):
                 self.pesos[key] = [p]
                 self.m = self.m + 1
 
-            if v not in self.grau:
-                self.grau[v] = [u]
+            if v not in self.arestas:
+                self.arestas[v] = [u]
             else:
-                self.grau[v].append(u)
-            if u not in self.grau:
-                self.grau[u] = [v]
-            else:
-                self.grau[u].append(v)
-
+                self.arestas[v].append(u)
         self.d = 2 * self.m/self.n
         self.graus_empiricos()
-
-    def lista(self, arquivo):
-        texto = ''
-        for u in self.grau:
-            texto += u + ' '
-            for v in self.grau.get(u):
-                texto += '->' + v + ' '
-            texto += '\n'
-        arquivo.write(texto)
-
-    def matriz(self, arquivo):
-        texto = ''
-        texto += '  '
-        for u in self.grau:
-            texto += u + ' '
-        texto += '\n'
-        for u in self.grau:
-            texto += u + ' '
-            for v in self.grau:
-                if v in self.grau[u]:
-                    texto += '1' + ' '
-                else:
-                    texto += '0' + ' '
-            texto += '\n'
-        arquivo.write(texto)
 
     def escrever_arquivo(self, arquivo):
         texto = '# n = ' + str(self.n) + '\n'
@@ -69,6 +38,31 @@ class Grafo(object):
         for m in self.distribuicao_graus:
             grau = self.distribuicao_graus[m]/self.n
             texto += str(m) + ' ' + str(grau) + '\n'
+        arquivo.write(texto)
+
+    def lista(self, arquivo):
+        texto = ''
+        for u in self.arestas:
+            texto += u + ' '
+            for v in self.arestas.get(u):
+                texto += '->' + v + ' '
+            texto += '\n'
+        arquivo.write(texto)
+
+    def matriz(self, arquivo):
+        texto = ''
+        texto += '  '
+        for u in self.arestas:
+            texto += u + ' '
+        texto += '\n'
+        for u in self.arestas:
+            texto += u + ' '
+            for v in self.arestas:
+                if v in self.arestas[u]:
+                    texto += '1' + ' '
+                else:
+                    texto += '0' + ' '
+            texto += '\n'
         arquivo.write(texto)
 
     def bfs(self, inicio):
@@ -113,8 +107,8 @@ class Grafo(object):
         print(ordem)
 
     def graus_empiricos(self):
-        for m in self.grau:
-            grau = len(self.grau[m])
+        for m in self.arestas:
+            grau = len(self.arestas[m])
             if grau not in self.distribuicao_graus:
                 self.distribuicao_graus[grau] = 1
             else:
@@ -134,5 +128,3 @@ class Grafo(object):
         print('\n')
         print('# distribuiçao dos graus:')
         print(self.distribuicao_graus)
-        print('\n')
-        print (self.grau)
