@@ -30,6 +30,7 @@ class Grafo(object):
                 self.arestas[v].append(u)
         self.d = 2 * self.m/self.n
         self.graus_empiricos()
+        print('----------- FINALIZANDO LEITURA DO GRAFO ----------------')
 
     def escrever_arquivo(self, arquivo):
         texto = '# n = ' + str(self.n) + '\n'
@@ -69,19 +70,38 @@ class Grafo(object):
         q = []
         visitado = []
         pais = {}
+        arvore = {}
+        count = 0
         q.append(inicio)
+        arvore[inicio] = count
         visitado.append(inicio)
-        print(inicio, end='\t')
+        #print(inicio, end='\t')
         while len(q) != 0:
             u = q.pop(0)
+            count += 1
             for vertice in self.arestas[u]:
                 if vertice not in visitado:
                     pais.update({vertice: u})
+                    arvore[vertice] = count
                     visitado.append(vertice)
                     q.append(vertice)
-                    print(vertice, end='\t')
-        print('\n')
-        print(pais)
+                    #print(vertice, end='\t')
+        #print('\n')
+        #print(pais)
+        #print(arvore)
+        print('-------------- FINALIZANDO O BFS ---------------')
+        return pais, arvore
+
+    def bfs_arquivo(self, arquivo, inicio):
+        pais, arvore = self.bfs(inicio)
+        texto = 'Pais dos vértices do Grafo:\n'
+        for chave in pais:
+            texto += 'Vertice ' + str(chave) + ': pai = ' + str(pais[chave]) + '\n'
+        texto += '\n' + 'Nível dos vértices na árvore:\n'
+        for chave in arvore:
+            texto += 'Vertice ' + str(chave) + ': está no nível ' + str(arvore[chave]) + '\n'
+        arquivo.write(texto)
+        print('---------- FINALIZANDO ESCRITA DO ARQUIVO DE SAIDA ------------')
 
     def dfs(self, inicio, visitado=[], ordem=[]):
         visitado.append(inicio)

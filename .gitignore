@@ -1,9 +1,7 @@
 .idea
 .DS_Store
 
-TrabalhoFinal/test.txt
+teste*.txt
 
 *.zip
 *.pyc
-Trabalho2/out.txt
-TrabalhoFinal/out.txt
