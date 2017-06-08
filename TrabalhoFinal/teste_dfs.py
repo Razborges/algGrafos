@@ -15,9 +15,9 @@ if __name__ == '__main__':
     grafo.ler_arquivo(arquivo)
 
     print('*** TESTE DFS ***')
-    grafo.dfs()
+    grafo.dfs('1')
     print('*** TESTE ORDENAÇÃO TOPOLÓGICA ***')
-    grafo.ordenacao_topologica()
+    grafo.ordenacao_topologica('1')
 
     try:
         arquivo.close()

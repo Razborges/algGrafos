@@ -81,13 +81,17 @@ class Grafo(object):
                     q.append(vertice)
                     print(vertice, end='\t')
         print('\n')
+        print(pais)
 
-    def dfs(self, visitado=[], ordem=[]):
+    def dfs(self, inicio, visitado=[], ordem=[]):
+        visitado.append(inicio)
+        print(inicio, end='\t')
         for vertice in self.arestas:
             if vertice not in visitado:
                 print(vertice, end='\t')
                 self.dfs_visita(vertice, visitado, ordem)
         print('\n')
+        ordem.insert(0, inicio)
 
     def dfs_visita(self, vertice, visitado, ordem):
         visitado.append(vertice)
@@ -100,10 +104,10 @@ class Grafo(object):
         else:
             ordem.append(vertice)
 
-    def ordenacao_topologica(self):
+    def ordenacao_topologica(self, inicio):
         visitado = []
         ordem = []
-        self.dfs(visitado, ordem)
+        self.dfs(inicio, visitado, ordem)
         print(ordem)
 
     def graus_empiricos(self):
