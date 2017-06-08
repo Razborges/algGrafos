@@ -37,6 +37,31 @@ class Grafo(object):
         self.d = 2 * self.m/self.n
         self.graus_empiricos()
 
+    def lista(self, arquivo):
+        texto = ''
+        for u in self.grau:
+            texto += u + ' '
+            for v in self.grau.get(u):
+                texto += '->' + v + ' '
+            texto += '\n'
+        arquivo.write(texto)
+
+    def matriz(self, arquivo):
+        texto = ''
+        texto += '  '
+        for u in self.grau:
+            texto += u + ' '
+        texto += '\n'
+        for u in self.grau:
+            texto += u + ' '
+            for v in self.grau:
+                if v in self.grau[u]:
+                    texto += '1' + ' '
+                else:
+                    texto += '0' + ' '
+            texto += '\n'
+        arquivo.write(texto)
+
     def escrever_arquivo(self, arquivo):
         texto = '# n = ' + str(self.n) + '\n'
         texto += '# m = ' + str(self.m) + '\n'
