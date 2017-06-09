@@ -41,16 +41,19 @@ class Grafo(object):
             texto += str(m) + ' ' + str(grau) + '\n'
         arquivo.write(texto)
 
-    def lista(self, arquivo):
+    def lista(self, arquivo=None):
         texto = ''
         for u in self.arestas:
             texto += u + ' '
             for v in self.arestas.get(u):
                 texto += '->' + v + ' '
             texto += '\n'
-        arquivo.write(texto)
+                if arquivo:
+            arquivo.write(texto)
+        else:
+            print(texto)
 
-    def matriz(self, arquivo):
+    def matriz(self, arquivo=None):
         texto = ''
         texto += '  '
         for u in self.arestas:
@@ -64,7 +67,10 @@ class Grafo(object):
                 else:
                     texto += '0' + ' '
             texto += '\n'
-        arquivo.write(texto)
+                if arquivo:
+            arquivo.write(texto)
+        else:
+            print(texto)
 
     def bfs(self, inicio):
         q = []
