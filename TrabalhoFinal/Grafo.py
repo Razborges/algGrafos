@@ -48,7 +48,7 @@ class Grafo(object):
             for v in self.arestas.get(u):
                 texto += '->' + v + ' '
             texto += '\n'
-                if arquivo:
+        if arquivo:
             arquivo.write(texto)
         else:
             print(texto)
@@ -67,7 +67,7 @@ class Grafo(object):
                 else:
                     texto += '0' + ' '
             texto += '\n'
-                if arquivo:
+        if arquivo:
             arquivo.write(texto)
         else:
             print(texto)
