@@ -13,16 +13,29 @@ class Grafo(object):
     def ler_arquivo(self, arquivo):
         self.n = int(arquivo.readline())
         for line in arquivo:
-            u, v, p = map(str, line.split())
-            key = str(u) + '-' + str(v)
-            if u not in self.arestas:
-                self.arestas[u] = [v]
-                self.pesos[key] = [p]
-                self.m = self.m + 1
+            s = line.split()
+            if len(s) == 3:
+                u, v, p = s
+                #u, v, p = map(str, line.split())
+                key = str(u) + '-' + str(v)
+                if u not in self.arestas:
+                    self.arestas[u] = [v]
+                    self.pesos[key] = [p]
+                    self.m = self.m + 1
+                else:
+                    self.arestas[u].append(v)
+                    self.pesos[key] = [p]
+                    self.m = self.m + 1
             else:
-                self.arestas[u].append(v)
-                self.pesos[key] = [p]
-                self.m = self.m + 1
+                u, v = s
+                key = str(u) + '-' + str(v)
+                if u not in self.arestas:
+                    self.arestas[u] = [v]
+                    self.m = self.m + 1
+                else:
+                    self.arestas[u].append(v)
+                    self.m = self.m + 1
+
 
             if v not in self.arestas:
                 self.arestas[v] = [u]
