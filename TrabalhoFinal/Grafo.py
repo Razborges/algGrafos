@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from datetime import datetime
+
 class Grafo(object):
     '''Definiçoes da estrutura do grafo e funções de algoritmos auxiliares'''
     def __init__(self):
@@ -16,7 +18,6 @@ class Grafo(object):
             s = line.split()
             if len(s) == 3:
                 u, v, p = s
-                #u, v, p = map(str, line.split())
                 key = str(u) + '-' + str(v)
                 if u not in self.arestas:
                     self.arestas[u] = [v]
@@ -28,22 +29,18 @@ class Grafo(object):
                     self.m = self.m + 1
             else:
                 u, v = s
-                key = str(u) + '-' + str(v)
                 if u not in self.arestas:
                     self.arestas[u] = [v]
                     self.m = self.m + 1
                 else:
                     self.arestas[u].append(v)
                     self.m = self.m + 1
-
-
             if v not in self.arestas:
                 self.arestas[v] = [u]
             else:
                 self.arestas[v].append(u)
         self.d = 2 * self.m/self.n
         self.graus_empiricos()
-        print('----------- FINALIZANDO LEITURA DO GRAFO ----------------')
 
     def escrever_arquivo(self, arquivo):
         texto = '# n = ' + str(self.n) + '\n'
@@ -86,6 +83,7 @@ class Grafo(object):
             print(texto)
 
     def bfs(self, inicio):
+        tempo1 = datetime.now()
         q = []
         visitado = []
         pais = {}
@@ -94,7 +92,6 @@ class Grafo(object):
         q.append(inicio)
         arvore[inicio] = count
         visitado.append(inicio)
-        #print(inicio, end='\t')
         while len(q) != 0:
             u = q.pop(0)
             count += 1
@@ -104,50 +101,54 @@ class Grafo(object):
                     arvore[vertice] = count
                     visitado.append(vertice)
                     q.append(vertice)
-                    #print(vertice, end='\t')
-        #print('\n')
-        #print(pais)
-        #print(arvore)
-        print('-------------- FINALIZANDO O BFS ---------------')
+        tempo2 = datetime.now()
+        tempo = tempo2 - tempo1
+        print(str(tempo.total_seconds()) + 's')
         return pais, arvore
 
     def bfs_arquivo(self, arquivo, inicio):
         pais, arvore = self.bfs(inicio)
-        texto = 'Pais dos vértices do Grafo:\n'
-        for chave in pais:
-            texto += 'Vertice ' + str(chave) + ': pai = ' + str(pais[chave]) + '\n'
-        texto += '\n' + 'Nível dos vértices na árvore:\n'
-        for chave in arvore:
-            texto += 'Vertice ' + str(chave) + ': está no nível ' + str(arvore[chave]) + '\n'
+        texto = _texto_imprimir_arvore(arvore, pais)
         arquivo.write(texto)
-        print('---------- FINALIZANDO ESCRITA DO ARQUIVO DE SAIDA ------------')
 
-    def dfs(self, inicio, visitado=[], ordem=[]):
+    def dfs(self, inicio):
+        tempo1 = datetime.now()
+        visitado = []
+        arvore = {}
+        pais = {}
+        count = 0
+        arvore[inicio] = count
         visitado.append(inicio)
         print(inicio, end='\t')
+        pai = inicio
         for vertice in self.arestas:
             if vertice not in visitado:
+                pais.update({vertice: pai})
                 print(vertice, end='\t')
-                self.dfs_visita(vertice, visitado, ordem)
+                self.dfs_visita(vertice, visitado, count, arvore, pais)
         print('\n')
-        ordem.insert(0, inicio)
+        print(pais)
+        print(arvore)
+        tempo2 = datetime.now()
+        tempo = tempo2 - tempo1
+        print(str(tempo.total_seconds()) + 's')
+        return pais, arvore
 
-    def dfs_visita(self, vertice, visitado, ordem):
+    def dfs_visita(self, vertice, visitado, count, arvore, pais):
         visitado.append(vertice)
-        if vertice in self.arestas:
-            for vertice_aux in self.arestas[vertice]:
-                if vertice_aux not in visitado:
-                    print(vertice_aux, end='\t')
-                    self.dfs_visita(vertice_aux, visitado, ordem)
-            ordem.insert(0, vertice)
-        else:
-            ordem.append(vertice)
+        count += 1
+        arvore[vertice] = count
+        pai = vertice
+        for vertice_aux in self.arestas[vertice]:
+            if vertice_aux not in visitado:
+                pais.update({vertice_aux: pai})
+                print(vertice_aux, end='\t')
+                self.dfs_visita(vertice_aux, visitado, count, arvore, pais)
 
-    def ordenacao_topologica(self, inicio):
-        visitado = []
-        ordem = []
-        self.dfs(inicio, visitado, ordem)
-        print(ordem)
+    def dfs_arquivo(self, arquivo, inicio):
+        pais, arvore = self.dfs(inicio)
+        texto = _texto_imprimir_arvore(arvore, pais)
+        arquivo.write(texto)
 
     def graus_empiricos(self):
         for m in self.arestas:
@@ -171,3 +172,13 @@ class Grafo(object):
         print('\n')
         print('# distribuiçao dos graus:')
         print(self.distribuicao_graus)
+
+
+def _texto_imprimir_arvore(arvore, pais):
+    texto = 'Pais dos vértices do Grafo:\n'
+    for chave in pais:
+        texto += 'Vertice ' + str(chave) + ': pai = ' + str(pais[chave]) + '\n'
+    texto += '\n' + 'Nível dos vértices na árvore:\n'
+    for chave in arvore:
+        texto += 'Vertice ' + str(chave) + ': está no nível ' + str(arvore[chave]) + '\n'
+    return texto
