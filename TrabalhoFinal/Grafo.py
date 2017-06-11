@@ -123,7 +123,8 @@ class Grafo(object):
         pai = inicio
         for vertice in self.arestas:
             if vertice not in visitado:
-                pais.update({vertice: pai})
+                if vertice in self.arestas.get(pai):
+                    pais.update({vertice: pai})
                 print(vertice, end='\t')
                 self.dfs_visita(vertice, visitado, count, arvore, pais)
         print('\n')
