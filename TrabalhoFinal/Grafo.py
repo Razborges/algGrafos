@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from datetime import datetime
+import copy
 
 class Grafo(object):
     '''Definiçoes da estrutura do grafo e funções de algoritmos auxiliares'''
@@ -158,6 +159,43 @@ class Grafo(object):
                 self.distribuicao_graus[grau] = 1
             else:
                 self.distribuicao_graus[grau] = self.distribuicao_graus[grau] + 1
+
+    def dijkstra(self, inicio, fim=None):
+        distancia = dict()
+        anterior = dict()
+        distancia[inicio] = 0
+        visitado = []
+        Q = copy.deepcopy(self.arestas)
+        def extract_min():
+            min = None
+            ret = None
+            for key in distancia:
+                if key in Q and ((distancia[key] < min) if min != None else True):
+                    min = distancia[key]
+                    ret = key
+            if ret is not None:
+                del Q[ret]
+            return ret
+        while Q:
+            u = extract_min()
+            for v in self.arestas[u]:
+                par = str(u) + '-' + str(v)
+                if par in self.pesos:
+                    alt = distancia[u] + int(self.pesos[par][0])
+                    if v not in distancia or alt < distancia[v]:
+                        distancia[v] = alt
+                        anterior[v] = u
+        node_list = list()
+        try:
+            next = fim
+            while True:
+                node_list.insert(0,next)
+                next = anterior[next]
+        except:
+            pass
+
+        print(distancia)
+        print(node_list)
 
 
     def imprimir_grafo(self):
