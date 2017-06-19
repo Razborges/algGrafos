@@ -117,20 +117,14 @@ class Grafo(object):
         visitado = []
         arvore = {}
         pais = {}
-        count = 0
+        count = -1
         arvore[inicio] = count
-        visitado.append(inicio)
-        print(inicio, end='\t')
         pai = inicio
         for vertice in self.arestas:
             if vertice not in visitado:
                 if vertice in self.arestas.get(pai):
                     pais.update({vertice: pai})
-                print(vertice, end='\t')
                 self.dfs_visita(vertice, visitado, count, arvore, pais)
-        print('\n')
-        print(pais)
-        print(arvore)
         tempo2 = datetime.now()
         tempo = tempo2 - tempo1
         print(str(tempo.total_seconds()) + 's')
@@ -138,19 +132,36 @@ class Grafo(object):
 
     def dfs_visita(self, vertice, visitado, count, arvore, pais):
         visitado.append(vertice)
+        pai = vertice
         count += 1
         arvore[vertice] = count
-        pai = vertice
         for vertice_aux in self.arestas[vertice]:
             if vertice_aux not in visitado:
                 pais.update({vertice_aux: pai})
-                print(vertice_aux, end='\t')
                 self.dfs_visita(vertice_aux, visitado, count, arvore, pais)
 
     def dfs_arquivo(self, arquivo, inicio):
         pais, arvore = self.dfs(inicio)
         texto = _texto_imprimir_arvore(arvore, pais)
         arquivo.write(texto)
+
+    def conexo(self, inicio):
+        pais, arvore = self.dfs(inicio)
+        grafos = []
+        grafo = []
+        for vertice in arvore:
+            if arvore[vertice] == 0:
+                if len(grafo) > 0:
+                    grafos.append(grafo)
+                grafo = []
+                grafo.append(vertice)
+            else:
+                grafo.append(vertice)
+        grafos.append(grafo)
+        grafos_aux = sorted(grafos, key=len, reverse=True)
+        print('Número de componentes conexas deste grafo: ' + str(len(grafos)))
+        for lista in grafos_aux:
+            print(str(len(lista)) + ' vértices: ' + str(lista))
 
     def graus_empiricos(self):
         for m in self.arestas:
@@ -164,7 +175,6 @@ class Grafo(object):
         distancia = dict()
         anterior = dict()
         distancia[inicio] = 0
-        visitado = []
         Q = copy.deepcopy(self.arestas)
         def extract_min():
             min = None
@@ -195,7 +205,7 @@ class Grafo(object):
             pass
 
         print(distancia)
-        print(node_list)
+        print('Menor caminho: ' + str(node_list))
 
 
     def imprimir_grafo(self):
@@ -214,10 +224,10 @@ class Grafo(object):
 
 
 def _texto_imprimir_arvore(arvore, pais):
-    texto = 'Pais dos vértices do Grafo:\n'
+    texto = ''
     for chave in pais:
         texto += 'Vertice ' + str(chave) + ': pai = ' + str(pais[chave]) + '\n'
-    texto += '\n' + 'Nível dos vértices na árvore:\n'
+    texto += '\n'
     for chave in arvore:
-        texto += 'Vertice ' + str(chave) + ': está no nível ' + str(arvore[chave]) + '\n'
+        texto += 'Vertice ' + str(chave) + ': nível = ' + str(arvore[chave]) + '\n'
     return texto
