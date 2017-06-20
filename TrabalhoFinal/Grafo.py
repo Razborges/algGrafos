@@ -41,7 +41,7 @@ class Grafo(object):
             else:
                 self.arestas[v].append(u)
         self.d = 2 * self.m/self.n
-        self.graus_empiricos()
+        self._graus_empiricos()
 
     def escrever_arquivo(self, arquivo):
         texto = '# n = ' + str(self.n) + '\n'
@@ -124,13 +124,13 @@ class Grafo(object):
             if vertice not in visitado:
                 if vertice in self.arestas.get(pai):
                     pais.update({vertice: pai})
-                self.dfs_visita(vertice, visitado, count, arvore, pais)
+                self._dfs_visita(vertice, visitado, count, arvore, pais)
         tempo2 = datetime.now()
         tempo = tempo2 - tempo1
         print(str(tempo.total_seconds()) + 's')
         return pais, arvore
 
-    def dfs_visita(self, vertice, visitado, count, arvore, pais):
+    def _dfs_visita(self, vertice, visitado, count, arvore, pais):
         visitado.append(vertice)
         pai = vertice
         count += 1
@@ -138,7 +138,7 @@ class Grafo(object):
         for vertice_aux in self.arestas[vertice]:
             if vertice_aux not in visitado:
                 pais.update({vertice_aux: pai})
-                self.dfs_visita(vertice_aux, visitado, count, arvore, pais)
+                self._dfs_visita(vertice_aux, visitado, count, arvore, pais)
 
     def dfs_arquivo(self, arquivo, inicio):
         pais, arvore = self.dfs(inicio)
@@ -162,14 +162,8 @@ class Grafo(object):
         print('Número de componentes conexas deste grafo: ' + str(len(grafos)))
         for lista in grafos_aux:
             print(str(len(lista)) + ' vértices: ' + str(lista))
-
-    def graus_empiricos(self):
-        for m in self.arestas:
-            grau = len(self.arestas[m])
-            if grau not in self.distribuicao_graus:
-                self.distribuicao_graus[grau] = 1
-            else:
-                self.distribuicao_graus[grau] = self.distribuicao_graus[grau] + 1
+        print('Grafos Conexos em ordem decrescente:')
+        print(grafos_aux)
 
     def dijkstra(self, inicio, fim=None):
         distancia = dict()
@@ -242,6 +236,14 @@ class Grafo(object):
             self.dijkstra(inicio, fim)
         else:
             self.bfs_caminho(inicio, fim)
+
+    def _graus_empiricos(self):
+        for m in self.arestas:
+            grau = len(self.arestas[m])
+            if grau not in self.distribuicao_graus:
+                self.distribuicao_graus[grau] = 1
+            else:
+                self.distribuicao_graus[grau] = self.distribuicao_graus[grau] + 1
 
     def imprimir_grafo(self):
         print('*** GRAFO DETALHADO ***')
