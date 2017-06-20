@@ -204,11 +204,11 @@ class Grafo(object):
         except:
             pass
 
-        print(distancia)
+        print('Relação vértice/menor custo possível: ' + str(distancia))
         if fim:
             print('Menor caminho: ' + str(node_list))
 
-    def bfs_caminho(self, inicio, fim):
+    def bfs_caminho(self, inicio, fim=None):
         q = []
         visitado = []
         arvore = {}
@@ -223,19 +223,22 @@ class Grafo(object):
                     arvore[vertice] = u
                     visitado.append(vertice)
                     q.append(vertice)
-                if vertice == fim:
-                    caminho.insert(0, vertice)
-                    v = arvore.get(vertice)
-                    while arvore.get(v) != 'raiz':
+                if fim:
+                    if vertice == fim:
+                        caminho.insert(0, vertice)
+                        v = arvore.get(vertice)
+                        while arvore.get(v) != 'raiz':
+                            caminho.insert(0, v)
+                            v = arvore.get(v)
                         caminho.insert(0, v)
-                        v = arvore.get(v)
-                    caminho.insert(0, v)
-                    print ('Menor Caminho: ' + str(caminho))
-                    return
-        print('vertice final não existe')
+                        print('Menor Caminho: ' + str(caminho))
+                        return
+                else:
+                    caminho.insert(0, vertice)
+        print('Caminho para todos os vértices: ' + str(visitado))
 
-    def menor_caminho(self, inicio, fim):
-        if len(self.pesos)>0:
+    def menor_caminho(self, inicio, fim=None):
+        if len(self.pesos) > 0:
             self.dijkstra(inicio, fim)
         else:
             self.bfs_caminho(inicio, fim)
