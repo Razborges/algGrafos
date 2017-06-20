@@ -229,8 +229,14 @@ class Grafo(object):
             u = extract_min()
             for v in self.arestas[u]:
                 par = str(u) + '-' + str(v)
+                par2 = str(v) + '-' + str(u)
                 if par in self.pesos:
                     alt = distancia[u] + int(self.pesos[par][0])
+                    if v not in distancia or alt < distancia[v]:
+                        distancia[v] = alt
+                        anterior[v] = u
+                elif  par2 in self.pesos:
+                    alt = distancia[u] + int(self.pesos[par2][0])
                     if v not in distancia or alt < distancia[v]:
                         distancia[v] = alt
                         anterior[v] = u

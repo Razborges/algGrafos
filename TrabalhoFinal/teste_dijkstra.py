@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     grafo = Grafo()
     grafo.ler_arquivo(arquivo)
-    grafo.dijkstra('1', '4')
+    grafo.dijkstra('3', '4')
 
     try:
         arquivo.close()
