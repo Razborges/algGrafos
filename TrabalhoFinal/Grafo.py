@@ -1,7 +1,7 @@
 # coding: utf-8
 
-from datetime import datetime
 import copy
+from datetime import datetime
 
 class Grafo(object):
     '''Definiçoes da estrutura do grafo e funções de algoritmos auxiliares'''
@@ -205,8 +205,40 @@ class Grafo(object):
             pass
 
         print(distancia)
-        print('Menor caminho: ' + str(node_list))
+        if fim:
+            print('Menor caminho: ' + str(node_list))
 
+    def bfs_caminho(self, inicio, fim):
+        q = []
+        visitado = []
+        arvore = {}
+        caminho = []
+        q.append(inicio)
+        arvore[inicio] = 'raiz'
+        visitado.append(inicio)
+        while len(q) != 0:
+            u = q.pop(0)
+            for vertice in self.arestas[u]:
+                if vertice not in visitado:
+                    arvore[vertice] = u
+                    visitado.append(vertice)
+                    q.append(vertice)
+                if vertice == fim:
+                    caminho.insert(0, vertice)
+                    v = arvore.get(vertice)
+                    while arvore.get(v) != 'raiz':
+                        caminho.insert(0, v)
+                        v = arvore.get(v)
+                    caminho.insert(0, v)
+                    print ('Menor Caminho: ' + str(caminho))
+                    return
+        print('vertice final não existe')
+
+    def menor_caminho(self, inicio, fim):
+        if len(self.pesos)>0:
+            self.dijkstra(inicio, fim)
+        else:
+            self.bfs_caminho(inicio, fim)
 
     def imprimir_grafo(self):
         print('*** GRAFO DETALHADO ***')
