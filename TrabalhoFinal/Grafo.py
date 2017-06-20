@@ -13,6 +13,11 @@ class Grafo(object):
         self.pesos = {}
         self.distribuicao_graus = {}
 
+    '''
+    Recebe arquivo que possui um grafo, na primeira linha consta o número total de vértices.
+    Cada linha deve indicar um conjunto de vertices e o peso separados por espaço.
+    Irá alimentar os atributos do objeto grafo.
+    '''
     def ler_arquivo(self, arquivo):
         self.n = int(arquivo.readline())
         for line in arquivo:
@@ -43,6 +48,10 @@ class Grafo(object):
         self.d = 2 * self.m/self.n
         self._graus_empiricos()
 
+    '''
+    Deve-se indicar o nome do arquivo onde será escrito as informações.
+    Escreve as informações do grafo em arquivo.
+    '''
     def escrever_arquivo(self, arquivo):
         texto = '# n = ' + str(self.n) + '\n'
         texto += '# m = ' + str(self.m) + '\n'
@@ -52,6 +61,10 @@ class Grafo(object):
             texto += str(m) + ' ' + str(grau) + '\n'
         arquivo.write(texto)
 
+    '''
+    Opcionalmente pode receber um arquivo.
+    Imprime no console ou em arquivo a representação do grafo em lista de adjacência.
+    '''
     def lista(self, arquivo=None):
         texto = ''
         for u in self.arestas:
@@ -64,6 +77,10 @@ class Grafo(object):
         else:
             print(texto)
 
+    '''
+    Opcionalmente pode receber um arquivo.
+    Imprime no console ou em arquivo a representação do grafo em matriz de adjacência.
+    '''
     def matriz(self, arquivo=None):
         texto = ''
         texto += '  '
@@ -83,6 +100,11 @@ class Grafo(object):
         else:
             print(texto)
 
+    '''
+    Executa a busca em largura.
+    Recebe um vértice em STRING para iniciar a busca.
+    Retorna a lista de pais de cada vértice e a lista com o nível de cada vértice em uma árvore.
+    '''
     def bfs(self, inicio):
         tempo1 = datetime.now()
         q = []
@@ -107,11 +129,20 @@ class Grafo(object):
         print(str(tempo.total_seconds()) + 's')
         return pais, arvore
 
+    '''
+    Recebe um arquivo e o início em STRING.
+    Escreve as informações dos pais e nível na árvore de cada vértice no arquivo.
+    '''
     def bfs_arquivo(self, arquivo, inicio):
         pais, arvore = self.bfs(inicio)
         texto = _texto_imprimir_arvore(arvore, pais)
         arquivo.write(texto)
 
+    '''
+    Executa a busca em profundidade.
+    Recebe um vértice em STRING para iniciar a busca.
+    Retorna a lista de pais de cada vértice e a lista com o nível de cada vértice em uma árvore.
+    '''
     def dfs(self, inicio):
         tempo1 = datetime.now()
         visitado = []
@@ -130,6 +161,7 @@ class Grafo(object):
         print(str(tempo.total_seconds()) + 's')
         return pais, arvore
 
+    '''Método privado não deve ser utilizado isoladamente'''
     def _dfs_visita(self, vertice, visitado, count, arvore, pais):
         visitado.append(vertice)
         pai = vertice
@@ -140,11 +172,19 @@ class Grafo(object):
                 pais.update({vertice_aux: pai})
                 self._dfs_visita(vertice_aux, visitado, count, arvore, pais)
 
+    '''
+    Recebe um arquivo e o início em STRING.
+    Escreve as informações dos pais e nível na árvore de cada vértice no arquivo.
+    '''
     def dfs_arquivo(self, arquivo, inicio):
         pais, arvore = self.dfs(inicio)
         texto = _texto_imprimir_arvore(arvore, pais)
         arquivo.write(texto)
 
+    '''
+    Recebe o início em STRING para efetuar a busca.
+    Verifica em um grafo todas as componentes conexas que ele possui e imprime um relatório detalhado no console.
+    '''
     def conexo(self, inicio):
         pais, arvore = self.dfs(inicio)
         grafos = []
@@ -165,6 +205,11 @@ class Grafo(object):
         print('Grafos Conexos em ordem decrescente:')
         print(grafos_aux)
 
+    '''
+    Recebe o início da busca em STRING e opcionalmente o fim da busca também em STRING.
+    Retorna o menor caminho entre o inicio e o fim.
+    Caso o fim não seja informado retorna uma lista com o menor custo para chegar em cada um dos vértices do grafo.
+    '''
     def dijkstra(self, inicio, fim=None):
         distancia = dict()
         anterior = dict()
@@ -197,11 +242,15 @@ class Grafo(object):
                 next = anterior[next]
         except:
             pass
-
         print('Relação vértice/menor custo possível: ' + str(distancia))
         if fim:
             print('Menor caminho: ' + str(node_list))
 
+    '''
+    Recebe o início da busca em STRING e opcionalmente o fim da busca também em STRING.
+    Retorna o caminho entre o inicio e o fim.
+    Caso o fim não seja informado retorna uma lista com o caminho percorrido em passar por todos os vértices do grafo.
+    '''
     def bfs_caminho(self, inicio, fim=None):
         q = []
         visitado = []
@@ -227,16 +276,20 @@ class Grafo(object):
                         caminho.insert(0, v)
                         print('Menor Caminho: ' + str(caminho))
                         return
-                else:
-                    caminho.insert(0, vertice)
         print('Caminho para todos os vértices: ' + str(visitado))
 
+    '''
+    Recebe o início da busca em STRING e opcionalmente o fim da busca também em STRING.
+    Verifica se o grafo possui arestas com peso ou não.
+    Retorna o menor caminho ou a distância para cada vértice.
+    '''
     def menor_caminho(self, inicio, fim=None):
         if len(self.pesos) > 0:
             self.dijkstra(inicio, fim)
         else:
             self.bfs_caminho(inicio, fim)
 
+    '''Método privado não deve ser utilizado isoladamente'''
     def _graus_empiricos(self):
         for m in self.arestas:
             grau = len(self.arestas[m])
@@ -245,6 +298,9 @@ class Grafo(object):
             else:
                 self.distribuicao_graus[grau] = self.distribuicao_graus[grau] + 1
 
+    '''
+    Imprime no console os atributos do grafo.
+    '''
     def imprimir_grafo(self):
         print('*** GRAFO DETALHADO ***')
         print('# n = ' + str(self.n))
@@ -259,7 +315,7 @@ class Grafo(object):
         print('# distribuiçao dos graus:')
         print(self.distribuicao_graus)
 
-
+'''Método privado não deve ser utilizado isoladamente'''
 def _texto_imprimir_arvore(arvore, pais):
     texto = ''
     for chave in pais:
