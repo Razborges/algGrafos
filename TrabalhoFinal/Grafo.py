@@ -216,7 +216,6 @@ class Grafo(object):
             if int(peso) < 0:
                 print('Essa operação não suporta grafos com arestas negativas!')
                 return
-            
         distancia = dict()
         anterior = dict()
         distancia[inicio] = 0
