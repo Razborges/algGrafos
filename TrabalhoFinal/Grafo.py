@@ -211,6 +211,12 @@ class Grafo(object):
     Caso o fim não seja informado retorna uma lista com o menor custo para chegar em cada um dos vértices do grafo.
     '''
     def dijkstra(self, inicio, fim=None):
+        for p in self.pesos:
+            peso = self.pesos.get(p)[0]
+            if int(peso) < 0:
+                print('Essa operação não suporta grafos com arestas negativas!')
+                return
+            
         distancia = dict()
         anterior = dict()
         distancia[inicio] = 0
